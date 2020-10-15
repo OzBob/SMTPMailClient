@@ -9,7 +9,7 @@ namespace Sendtestemail
         static void Main(string[] args)
         {
             
-            if (args.Length != 6)
+            if (args.Length < 6)
             {
                 Console.WriteLine("Sendtestemail from to server port un pwd [msgid]");
                 return;
@@ -22,7 +22,7 @@ namespace Sendtestemail
                 var port = args[3];
                 var un = args[4];
                 var pwd = args[5];
-                string mid = args.Length>5?args[6]:null;
+                string mid = args.Length==7?args[6]:null;
 
                 Console.WriteLine("Hello World!");
                 IInsolMailKit email = new InsolMailKit();
