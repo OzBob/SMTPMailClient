@@ -9,7 +9,7 @@ namespace ServiceBus.Service
 {
 	public interface IInsolMailKit
 	{
-		void SendEmail(System.Net.Mail.MailMessage mailmsg, int smtpClientPort, string servername, string smtpUsername, string smtpPassword, bool useSSL, bool overridecertificate = false);
+		void SendEmail(System.Net.Mail.MailMessage mailmsg, int smtpClientPort, string servername, string smtpUsername, string smtpPassword, bool useSSL, bool overridecertificate = false, string messageid = "", bool generateMessageIdIfMissing = false);
 	}
 	public class InsolMailKit : IInsolMailKit
 	{
@@ -23,7 +23,7 @@ namespace ServiceBus.Service
 			_transferProgress = transferProgress;
 		}
 
-		public void SendEmail(System.Net.Mail.MailMessage mailmsg, int smtpClientPort, string servername, string smtpUsername, string smtpPassword, bool useSSL, bool overridecertificate = false)
+		public void SendEmail(System.Net.Mail.MailMessage mailmsg, int smtpClientPort, string servername, string smtpUsername, string smtpPassword, bool useSSL, bool overridecertificate = false, string messageid = "", bool generateMessageIdIfMissing = false)
 		{
 			if (overridecertificate)
 			{
@@ -45,7 +45,9 @@ namespace ServiceBus.Service
 			}
 			var msg = MimeKit.MimeMessage.CreateFromMailMessage(mailmsg);
 
-			if (msg.MessageId  == null)
+			if (!string.IsNullOrEmpty(messageid))
+				msg.MessageId  = messageid;
+			else if (generateMessageIdIfMissing)
 				msg.MessageId  = SMTPMailClient.MimeUtils.GenerateMessageId(servername);
 			
 			//Send Message
